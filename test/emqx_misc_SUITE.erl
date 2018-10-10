@@ -12,8 +12,11 @@
 %% See the License for the specific language governing permissions and
 %% limitations under the License.
 
--module(emqx_misc_tests).
+-module(emqx_misc_SUITE).
 -include_lib("eunit/include/eunit.hrl").
+
+-compile(export_all).
+-compile(nowarn_export_all).
 
 -define(SOCKOPTS, [binary,
                    {packet,    raw},
@@ -21,8 +24,13 @@
                    {backlog,   512},
                    {nodelay,   true}]).
 
+all() ->
+    [t_merge_opts_test,
+     timer_cancel_flush_test,
+     shutdown_disabled_test,
+     message_queue_too_long_test].
 
-t_merge_opts_test() ->
+t_merge_opts_test(_) ->
     Opts = emqx_misc:merge_opts(?SOCKOPTS, [raw,
                                             binary,
                                             {backlog, 1024},
@@ -39,20 +47,20 @@ t_merge_opts_test() ->
      {packet, raw},
      {reuseaddr, true}] = lists:sort(Opts).
 
-timer_cancel_flush_test() ->
+timer_cancel_flush_test(_) ->
     Timer = emqx_misc:start_timer(0, foo),
     ok = emqx_misc:cancel_timer(Timer),
     receive {timeout, Timer, foo} -> error(unexpected)
     after 0 -> ok
     end.
 
-shutdown_disabled_test() ->
+shutdown_disabled_test(_) ->
     self() ! foo,
     ?assertEqual(continue, conn_proc_mng_policy(0)),
     receive foo -> ok end,
     ?assertEqual(hibernate, conn_proc_mng_policy(0)).
 
-message_queue_too_long_test() ->
+message_queue_too_long_test(_) ->
     self() ! foo,
     self() ! bar,
     ?assertEqual({shutdown, message_queue_too_long},
