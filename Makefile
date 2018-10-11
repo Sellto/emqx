@@ -4,7 +4,7 @@ PROJECT = emqx
 PROJECT_DESCRIPTION = EMQ X Broker
 PROJECT_VERSION = 3.0
 
-DEPS = jsx gproc gen_rpc lager ekka esockd cowboy clique lager_syslog
+DEPS = jsx gproc gen_rpc lager ekka esockd cowboy clique lager_syslog lwm2mdev
 
 dep_jsx     = git https://github.com/talentdeficit/jsx 2.9.0
 dep_gproc   = git https://github.com/uwiger/gproc 0.8.0
@@ -15,6 +15,7 @@ dep_ekka    = git https://github.com/emqx/ekka v0.4.1
 dep_cowboy  = git https://github.com/ninenines/cowboy 2.4.0
 dep_clique  = git https://github.com/emqx/clique develop
 dep_lager_syslog = git https://github.com/basho/lager_syslog 3.0.1
+dep_lwm2mdev = git https://github.com/Sellto/emqx-lwm2m 3.0.0
 
 NO_AUTOPATCH = cuttlefish
 
@@ -138,4 +139,3 @@ dep-vsn-check:
 		  {[], []} -> halt(0); \
 		  {Rebar, Mk} -> erlang:error({deps_version_discrepancy, [{rebar, Rebar}, {mk, Mk}]}) \
 		end."
-
